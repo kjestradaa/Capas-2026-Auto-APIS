@@ -2,6 +2,7 @@ package com.everis.base.stepDefinitions;
 
 import com.everis.base.PetStoreStep;
 import com.everis.base.models.Order;
+import io.cucumber.java.PendingException;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;

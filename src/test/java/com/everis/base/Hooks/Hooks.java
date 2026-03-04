@@ -1,7 +1,8 @@
 package com.everis.base.Hooks;
 
-import com.everis.base.NetflixService;
 import io.cucumber.java.BeforeStep;
+import net.serenitybdd.screenplay.actors.OnStage;
+import net.serenitybdd.screenplay.actors.OnlineCast;
 
 public class Hooks {
     private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(Hooks.class);
@@ -9,6 +10,7 @@ public class Hooks {
     //https://www.baeldung.com/java-cucumber-hooks
     @BeforeStep
     public void beforeStep(){ //
+        OnStage.setTheStage(new OnlineCast());
         LOGGER.info( "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
     }
 }
