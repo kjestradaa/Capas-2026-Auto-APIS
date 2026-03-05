@@ -58,10 +58,18 @@ public class PetAdminStep {
     }
 
     public void validarHeaderRespuesta() {
-        String headerValue = String.valueOf(respuestaPetCreated.headers());
+            String headerValue = null;
+        ExtractableResponse<Response> respuesta= null;
+        if (respuestaPetCreated != null){
+            respuesta=respuestaPetCreated;
+        headerValue = String.valueOf(respuestaPetCreated.headers());}
+        if (respuestaPetGet != null){
+            respuesta=respuestaPetGet;
+            headerValue = String.valueOf(respuestaPetGet.headers());
+        }
         if (headerValue == null) {
             throw new AssertionError("El header es null");
-        } else System.out.println("El header no es null y el Content-Type es: " + respuestaPetCreated.header("Content-Type")+"\n");
+        } else System.out.println("El header es null y el Content-Type es: " + respuesta.header("Content-Type")+"\n");
     }
 
     public Pet obtenerRespuestaPet(){

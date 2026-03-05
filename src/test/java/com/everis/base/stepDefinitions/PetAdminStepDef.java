@@ -45,7 +45,7 @@ public class PetAdminStepDef {
         codigoRespuesta = codigo;
     }
 
-    @And("el header de la respuesta no debe ser null")
+    @And("valido el header de la respuesta")
     public void elHeaderDeLaRespuestaNoDebeSerNull() {
         petAdmin.validarHeaderRespuesta();
     }
@@ -116,6 +116,8 @@ public class PetAdminStepDef {
         if (!flagIdValido||codigoRespuesta == 200) {
             String errorCodeObtenido = petAdmin.validarErrorCodeRespuesta(errorCode);
             assertEquals(errorCode, errorCodeObtenido);
+        } else {
+            System.out.println("No hay headers ni body del response");
         }
     }
 
