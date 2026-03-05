@@ -13,7 +13,7 @@ import org.openqa.selenium.chrome.ChromeDriverService;
 @RunWith(CucumberWithSerenity.class)
 @CucumberOptions(features = "src/test/resources/features",
         glue = "com.everis.base",
-        tags = "@CrearMascota", // => Se puede especificar qué Ejecutar
+        tags = "@PetAdmin", //@CrearMascota @BuscarMascota, @EliminarMascota
         strict = true)
 public class BaseTest {
 

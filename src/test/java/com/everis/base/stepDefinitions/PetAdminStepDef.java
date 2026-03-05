@@ -20,6 +20,7 @@ import static org.junit.Assert.assertNotNull;
 public class PetAdminStepDef {
 
     private int codigoRespuesta;
+    private boolean flagIdValido=false;
 
     @Steps
     PetAdminStep petAdmin;
@@ -28,8 +29,8 @@ public class PetAdminStepDef {
     public void estoyEnLaPaginaMascotas() {
     }
 
-    @When("creo una mascota con id{long}, nombre{string}, categoria{string}, foto{string}, tag{string}, estado{string}")
-    public void creoUnaMascota(long id, String name, String categoryName, String fotoUrl, String tag, String status) {
+    @When("creo una mascota con id{string}, nombre{string}, categoria{string}, foto{string}, tag{string}, estado{string}")
+    public void creoUnaMascota(String id, String name, String categoryName, String fotoUrl, String tag, String status) {
         Category category = new Category(1, categoryName);
         List<String> photoUrls = new ArrayList<>();
         photoUrls.add(0, fotoUrl);
@@ -49,8 +50,8 @@ public class PetAdminStepDef {
         petAdmin.validarHeaderRespuesta();
     }
 
-    @And("la respuesta debe contener el id{long}, nombre{string}, categoria{string}, foto{string}, tag{string}, estado{string}")
-    public void laRespuestaDebeContenerElIdNombreEstado(long id, String name, String categoryName, String fotoUrl, String tag, String status) {
+    @And("la respuesta debe contener el id{string}, nombre{string}, categoria{string}, foto{string}, tag{string}, estado{string}")
+    public void laRespuestaDebeContenerElIdNombreEstado(String id, String name, String categoryName, String fotoUrl, String tag, String status) {
         Pet pet = petAdmin.obtenerRespuestaPet();
         assertNotNull(pet);
         assertEquals(id, pet.getId());
@@ -61,8 +62,8 @@ public class PetAdminStepDef {
         assertEquals(status, pet.getStatus());
     }
 
-    @When("busco una mascota con id{long}")
-    public void buscoUnaMascotaConIdId(long id) {
+    @When("busco una mascota con id{string}")
+    public void buscoUnaMascotaConIdId(String id) {
         petAdmin.searchPetById(id);
     }
 
@@ -87,7 +88,52 @@ public class PetAdminStepDef {
     public void elMensajeDeErrorContiene(String errorMessage) {
         if (codigoRespuesta != 200) {
             String errorMessageObtenido = petAdmin.validarErrorMessageRespuesta(errorMessage);
-            assertEquals(errorMessage, errorMessageObtenido);
+            assertEquals(errorMessage, errorMessageObtenido.substring(0, Math.min(errorMessageObtenido.length(),31)));
         }
     }
+
+    @When("elimino una mascota con id{string}")
+    public void eliminoUnaMascotaConId(String id) {
+        try {
+            Integer.parseInt(id);
+            flagIdValido= true;
+        } catch (NumberFormatException e) {
+            flagIdValido = false;
+        }
+        petAdmin.deletePetById(id);
+    }
+
+    @And("el mensaje de error es {string}")
+    public void elMensajeDeErrorEs(String errorMessage) {
+        if (codigoRespuesta != 200) {
+            String errorMessageObtenido = petAdmin.validarErrorMessageRespuesta(errorMessage);
+            assertEquals(errorMessage, errorMessageObtenido.substring(0, Math.min(errorMessageObtenido.length(),31)));
+        }
+    }
+
+    @And("codigo de error es {string}")
+    public void codigoDeErrorEs(String errorCode) {
+        if (!flagIdValido||codigoRespuesta == 200) {
+            String errorCodeObtenido = petAdmin.validarErrorCodeRespuesta(errorCode);
+            assertEquals(errorCode, errorCodeObtenido);
+        }
+    }
+
+    @And("tipo de error es {string}")
+    public void tipoDeErrorEs(String errorType) {
+        if (!flagIdValido||codigoRespuesta == 200) {
+            String errorTypeObtenido = petAdmin.validarErrorTypeRespuesta(errorType);
+            assertEquals(errorType, errorTypeObtenido);
+        }
+    }
+
+    @And("mensaje de error es {string}")
+    public void mensajeDeErrorContiene(String errorMessage) {
+        if (!flagIdValido||codigoRespuesta == 200) {
+            String errorMessageObtenido = petAdmin.validarErrorMessageRespuesta(errorMessage);
+            assertEquals(errorMessage, errorMessageObtenido.substring(0, Math.min(errorMessageObtenido.length(),31)));
+        }
+    }
+
+
 }

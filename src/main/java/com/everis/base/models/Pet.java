@@ -9,7 +9,7 @@ import java.util.List;
 @JsonPropertyOrder({"id","category","name","photoUrls","tags","status"})
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Pet {
-    private long id;
+    private String id;
     private Category category;
     private String name;
     private List<String> photoUrls;
@@ -19,7 +19,7 @@ public class Pet {
     public Pet() {
     }
 
-    public Pet(long id, Category category, String name, List<String> photoUrls, List<Tag> tags, String status) {
+    public Pet(String id, Category category, String name, List<String> photoUrls, List<Tag> tags, String status) {
         this.id = id;
         this.category = category;
         this.name = name;
@@ -40,11 +40,11 @@ public class Pet {
                 '}';
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

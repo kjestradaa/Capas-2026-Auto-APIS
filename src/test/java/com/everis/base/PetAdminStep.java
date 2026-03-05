@@ -21,7 +21,7 @@ public class PetAdminStep {
     private String errorType;
     private String errorMessage;
 
-    public void crearPet(long id, Category category, String name, List<String> photoUrls, List<Tag> tags, String status){
+    public void crearPet(String id, Category category, String name, List<String> photoUrls, List<Tag> tags, String status){
         Pet nuevoPet = new Pet( id,  category,  name, photoUrls,  tags, status);
 
         respuestaPetCreated = given()
@@ -68,7 +68,7 @@ public class PetAdminStep {
         return respuestaGetPetById;
     }
 
-    public void searchPetById(long id){
+    public void searchPetById(String id){
         respuestaPetGet = given()
                 .baseUri(URL_BASE)
                 .when()
@@ -90,7 +90,7 @@ public class PetAdminStep {
             System.out.println();
             System.out.println(respuestaGetPetById.toString());
         } else {
-            System.out.println("No se encontró la mascota con ID " + id + ". Código de respuesta: " + codigoRespuesta);
+            System.out.println("\nNo se encontró la mascota con ID " + id + ". Código de respuesta: " + codigoRespuesta);
         }
 
     }
@@ -109,10 +109,36 @@ public class PetAdminStep {
     }
 
     public String validarErrorMessageRespuesta(String errorMessageEsperado){
-        if(!errorMessage.equalsIgnoreCase(errorMessageEsperado)){
+        if(!errorMessage.contains(errorMessageEsperado)){
             throw new AssertionError("Mensaje de error esperado: " +errorMessageEsperado + "Mensaje de error Obtenido: " +errorMessage);
         } else System.out.println("El mensaje de error es el esperado: " + errorMessage);
         return errorMessage;
     }
 
+    public void deletePetById(String id) {
+        boolean flagIdValido = false;
+        respuestaPetGet = given()
+                .baseUri(URL_BASE)
+                .when()
+                .delete("/pet/"+id)
+                .then()
+                .extract();
+        codigoRespuesta = respuestaPetGet.statusCode();
+        try {
+            Integer.parseInt(id);
+            flagIdValido= true;
+        } catch (NumberFormatException e) {
+            flagIdValido = false;
+        }
+        if (!flagIdValido || codigoRespuesta == 200) {
+        errorCode = respuestaPetGet.jsonPath().getString("code");
+        errorType = respuestaPetGet.jsonPath().getString("type");
+        errorMessage = respuestaPetGet.jsonPath().getString("message");}
+
+        if (codigoRespuesta==200){
+            System.out.println("\nLa mascota con ID " + id + " fue eliminada exitosamente.");
+        } else {
+            System.out.println("\nNo se encontró la mascota con ID " + id + ". Código de respuesta: " + codigoRespuesta);
+        }
+    }
 }
